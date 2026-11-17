@@ -1,0 +1,357 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Dynamic application & report print typography, paper, and theme variables */
+:root {
+  --report-font-family: "Times New Roman", Times, Georgia, serif;
+  --report-font-size: 11pt;
+  --report-line-height: 1.35;
+  --report-body-weight: normal;
+  --report-font-style: normal;
+  --report-text-align: left;
+  --app-ui-font-scale: 100%;
+  --app-ui-font-family: "Plus Jakarta Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --print-page-size: 215mm 330mm;
+  --print-margin-top: 20mm;
+  --print-margin-right: 20mm;
+  --print-margin-bottom: 20mm;
+  --print-margin-left: 25mm;
+  --theme-accent: #059669;
+  --theme-accent-hover: #047857;
+}
+
+html {
+  font-size: var(--app-ui-font-scale, 100%);
+  font-family: var(--app-ui-font-family);
+}
+
+html.dark {
+  color-scheme: dark;
+}
+
+.report-typography-scope {
+  font-family: var(--report-font-family) !important;
+  font-size: var(--report-font-size, 11pt) !important;
+  line-height: var(--report-line-height, 1.35) !important;
+  font-style: var(--report-font-style, normal);
+}
+
+.report-typography-scope table,
+.report-typography-scope td,
+.report-typography-scope th,
+.report-typography-scope p,
+.report-typography-scope li,
+.report-typography-scope h1,
+.report-typography-scope h2,
+.report-typography-scope h3,
+.report-typography-scope h4,
+.report-typography-scope span:not(.no-print),
+.report-typography-scope div:not(.no-print) {
+  font-family: var(--report-font-family) !important;
+  line-height: var(--report-line-height, 1.35);
+}
+
+/* Skala ukuran huruf rapor agar benar-benar berubah mengikuti Size (pt) pilihan pengguna hingga 24pt */
+.report-typography-scope .text-xs:not(.no-print),
+.report-typography-scope .text-\[11px\]:not(.no-print),
+.report-typography-scope .text-\[12px\]:not(.no-print),
+.report-typography-scope .text-\[13px\]:not(.no-print),
+.report-typography-scope table,
+.report-typography-scope th,
+.report-typography-scope td {
+  font-size: 1em !important;
+  font-style: var(--report-font-style, normal);
+}
+
+.report-typography-scope td:not(.font-bold):not(.font-black):not(.font-semibold),
+.report-typography-scope p:not(.font-bold):not(.font-black) {
+  font-weight: var(--report-body-weight, normal);
+}
+
+.report-typography-scope .report-desc-cell {
+  text-align: var(--report-text-align, left);
+  font-weight: var(--report-body-weight, normal);
+}
+
+.report-typography-scope .text-\[10px\]:not(.no-print) {
+  font-size: 0.88em !important;
+}
+
+.report-typography-scope .text-sm:not(.no-print) {
+  font-size: 1.08em !important;
+}
+
+.report-typography-scope .text-base:not(.no-print) {
+  font-size: 1.18em !important;
+}
+
+.report-typography-scope .text-lg:not(.no-print) {
+  font-size: 1.32em !important;
+}
+
+.report-typography-scope .text-xl:not(.no-print) {
+  font-size: 1.48em !important;
+}
+
+.report-typography-scope .text-2xl:not(.no-print) {
+  font-size: 1.72em !important;
+}
+
+.report-typography-scope .text-3xl:not(.no-print) {
+  font-size: 2.05em !important;
+}
+
+.report-typography-scope .report-text-scale {
+  font-size: var(--report-font-size) !important;
+}
+
+@media screen {
+  .report-paper-sheet {
+    padding: var(--print-margin-top, 20mm) var(--print-margin-right, 20mm) var(--print-margin-bottom, 20mm) var(--print-margin-left, 25mm);
+    transition: max-width 0.2s ease, min-height 0.2s ease, padding 0.2s ease;
+  }
+
+  .report-paper-sheet--portrait {
+    max-width: 56rem; /* ~896px proporsional F4/A4 Vertikal */
+  }
+
+  .report-paper-sheet--landscape {
+    max-width: 76rem; /* ~1216px proporsional F4/A4 Horizontal */
+  }
+}
+
+@media print {
+  .report-paper-sheet,
+  .report-paper-sheet--portrait,
+  .report-paper-sheet--landscape {
+    padding: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+}
+
+@media print {
+  /* Dynamic page sizing and standard margins customizable by user */
+  @page {
+    size: var(--print-page-size, auto);
+    margin: var(--print-margin-top, 15mm) var(--print-margin-right, 15mm) var(--print-margin-bottom, 15mm) var(--print-margin-left, 20mm);
+  }
+
+  /* Grayscale mode for eco / ink-saving printing in remote schools */
+  body.print-grayscale .printable-area,
+  body.print-grayscale table,
+  body.print-grayscale img,
+  body.print-grayscale svg {
+    filter: grayscale(100%) contrast(105%) !important;
+    -webkit-filter: grayscale(100%) contrast(105%) !important;
+  }
+
+  /* Optional hide official KOP when printing on pre-printed school letterhead */
+  body.print-hide-kop .print-kop-header,
+  body.print-hide-kop [data-kop-header="true"] {
+    display: none !important;
+  }
+
+  /* Solid dark borders for official Kemdikbud report cards */
+  body.print-border-solid table,
+  body.print-border-solid td,
+  body.print-border-solid th {
+    border-color: #000000 !important;
+  }
+
+  /* CRITICAL: Neutralize overflow on document root and main wrappers so all pages paginate cleanly */
+  html,
+  body {
+    width: 100% !important;
+    height: auto !important;
+    min-height: 100% !important;
+    overflow: visible !important;
+    position: static !important;
+    background-color: #ffffff !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Only reset container layout wrappers, do NOT destroy inner component divs */
+  #root,
+  #root > div,
+  main,
+  .print-scroll-wrapper {
+    overflow: visible !important;
+    height: auto !important;
+    max-height: none !important;
+    position: static !important;
+    display: block !important;
+    background: #ffffff !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+
+  /* Hide non-printable interface elements */
+  .no-print,
+  header,
+  aside,
+  nav,
+  button:not(.allow-print),
+  .save-notification-toast {
+    display: none !important;
+  }
+
+  /* Clear and definitive page breaks for each report sheet */
+  .print-page-break {
+    page-break-after: always !important;
+    break-after: page !important;
+    clear: both !important;
+    display: block !important;
+    position: relative !important;
+    margin-bottom: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    background-color: #ffffff !important;
+  }
+
+  .print-page-break-before {
+    page-break-before: always !important;
+    break-before: page !important;
+    clear: both !important;
+    display: block !important;
+  }
+
+  /* Prevent awkward cuts inside cards, table rows, and signature boxes */
+  .print-avoid-break,
+  .printable-area,
+  .report-cover-page,
+  table,
+  tr,
+  td,
+  th,
+  .signature-box,
+  .catatan-box {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .printable-area {
+    box-shadow: none !important;
+    border: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 auto !important;
+    background-color: #ffffff !important;
+  }
+
+  /* Force table borders and clean rendering */
+  table {
+    border-collapse: collapse !important;
+    width: 100% !important;
+  }
+
+  thead {
+    display: table-header-group !important;
+  }
+
+  tfoot {
+    display: table-footer-group !important;
+  }
+}
+
+/* Official Google Sign-In Material Button */
+.gsi-material-button {
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  -webkit-appearance: none;
+  background-color: #ffffff;
+  background-image: none;
+  border: 1px solid #747775;
+  border-radius: 20px;
+  box-sizing: border-box;
+  color: #1f1f1f;
+  cursor: pointer;
+  font-family: 'Roboto', arial, sans-serif;
+  font-size: 14px;
+  height: 40px;
+  letter-spacing: 0.25px;
+  outline: none;
+  overflow: hidden;
+  padding: 0 16px;
+  position: relative;
+  text-align: center;
+  transition: background-color 0.218s, border-color 0.218s, box-shadow 0.218s;
+  vertical-align: middle;
+  white-space: nowrap;
+  width: auto;
+  max-width: 400px;
+  min-width: min-content;
+}
+
+.gsi-material-button .gsi-material-button-icon {
+  height: 20px;
+  margin-right: 12px;
+  min-width: 20px;
+  width: 20px;
+}
+
+.gsi-material-button .gsi-material-button-content-wrapper {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  height: 100%;
+  justify-content: space-between;
+  position: relative;
+  width: 100%;
+}
+
+.gsi-material-button .gsi-material-button-contents {
+  flex-grow: 1;
+  font-family: 'Roboto', arial, sans-serif;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: top;
+}
+
+.gsi-material-button .gsi-material-button-state {
+  transition: opacity 0.218s;
+  bottom: 0;
+  left: 0;
+  opacity: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.gsi-material-button:disabled {
+  cursor: default;
+  background-color: #ffffff61;
+  border-color: #1f1f1f1f;
+}
+
+.gsi-material-button:disabled .gsi-material-button-contents,
+.gsi-material-button:disabled .gsi-material-button-icon {
+  opacity: 38%;
+}
+
+.gsi-material-button:not(:disabled):active .gsi-material-button-state,
+.gsi-material-button:not(:disabled):focus .gsi-material-button-state {
+  background-color: #303030;
+  opacity: 12%;
+}
+
+.gsi-material-button:not(:disabled):hover {
+  box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
+}
+
+.gsi-material-button:not(:disabled):hover .gsi-material-button-state {
+  background-color: #303030;
+  opacity: 8%;
+}
+
